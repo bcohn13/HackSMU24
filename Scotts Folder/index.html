@@ -3,43 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>War Card Game</title>
+    <title>WAR</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>War Card Game</h1>
-
-        <div class="game-board">
-            <div class="player player-1">
-                <h2>Player 1</h2>
-                <img id="player1Card" src="cards/back.png" alt="Player 1 Card" class="card">
-                <div id="player1Score">Score: 0</div>
-            </div>
-
-            <div class="versus">
-                <h2 id="roundNumber">Round 1 of 10</h2>
-                <h2 id="winnerText">Press Flip to Play!</h2>
-                <button id="flipButton" class="flip-btn">Flip Cards</button>
-            </div>
-
-            <div class="player player-2">
-                <h2>Player 2</h2>
-                <img id="player2Card" src="cards/back.png" alt="Player 2 Card" class="card">
-                <div id="player2Score">Score: 0</div>
-            </div>
+    <h1>WAR</h1>
+    <div class="card-container">
+        <div>
+            <h2>Player 1</h2>
+            <div id="player1Card" class="card"><img src="cards/back.png" alt="Back of card"></div>
+            <div id="player1Score">Rounds Won: 0</div>
+        </div>
+        <div>
+            <h2>Player 2</h2>
+            <div id="player2Card" class="card"><img src="cards/back.png" alt="Back of card"></div>
+            <div id="player2Score">Rounds Won: 0</div>
         </div>
     </div>
-
-    <!-- Popup Modal -->
-    <div id="resultModal" class="modal">
-        <div class="modal-content">
-            <span id="closeModal" class="close">&times;</span>
-            <h2 id="modalText"></h2>
-            <button id="nextRoundButton">Next Round</button>
-        </div>
-    </div>
-
+    <button id="flipButton">Flip Cards</button>
+    <button id="nextRoundButton" style="display: none;">Next Round</button>
+    <div id="result"></div>
     <script src="game.js"></script>
 </body>
 </html>

@@ -1,115 +1,113 @@
-const values = [
-    "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a", "2", "3", "4", "5", "6", "7", "8", "9", "10", "j", "q", "k", "a"
-];
+const values = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'];
 
-// Create a deck of cards
-function createDeck() {
-    let deck = [];
-    for (let value of values) {
-        deck.push({
-            value: value,
-            image: `cards/${value}.png`, // Update to point to the 'cards' folder
-            strength: values.indexOf(value) + 2 // Card strength 2 (lowest) to Ace (highest)
-        });
-    }
-    return deck;
-}
-
-// Shuffle the deck
-function shuffleDeck(deck) {
-    for (let i = deck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [deck[i], deck[j]] = [deck[j], deck[i]];
-    }
-    return deck;
-}
-
-// Initialize game variables
-let deck = shuffleDeck(createDeck());
-let round = 1;
-let player1Score = 0;
-let player2Score = 0;
-
-// DOM Elements
-const player1CardImg = document.getElementById("player1Card");
-const player2CardImg = document.getElementById("player2Card");
+const player1Cards = [];
+const player2Cards = [];
+const player1Score = document.getElementById("player1Score");
+const player2Score = document.getElementById("player2Score");
+const player1CardElement = document.getElementById("player1Card");
+const player2CardElement = document.getElementById("player2Card");
 const flipButton = document.getElementById("flipButton");
-const winnerText = document.getElementById("winnerText");
-const roundNumber = document.getElementById("roundNumber");
-const player1ScoreText = document.getElementById("player1Score");
-const player2ScoreText = document.getElementById("player2Score");
-
-// Modal elements
-const resultModal = document.getElementById("resultModal");
-const modalText = document.getElementById("modalText");
+const resultElement = document.getElementById("result");
 const nextRoundButton = document.getElementById("nextRoundButton");
-const closeModal = document.getElementById("closeModal");
 
-// Flip Event
-flipButton.addEventListener("click", function () {
-    if (round > 10) return;
+let player1Deck = [];
+let player2Deck = [];
+let roundCount = 0;
+let player1RoundsWon = 0;
+let player2RoundsWon = 0;
 
-    const player1Card = deck.pop();
-    const player2Card = deck.pop();
-    player1CardImg.src = player1Card.image;
-    player2CardImg.src = player2Card.image;
-
-    // Determine the round winner
-    let roundWinner = "";
-    if (player1Card.strength > player2Card.strength) {
-        roundWinner = "Player 1 Wins the Round!";
-        player1Score++;
-    } else if (player1Card.strength < player2Card.strength) {
-        roundWinner = "Player 2 Wins the Round!";
-        player2Score++;
-    } else {
-        roundWinner = "It's a Tie!";
+function initializeGame() {
+    player1Deck = [];
+    player2Deck = [];
+    roundCount = 0;
+    player1RoundsWon = 0;
+    player2RoundsWon = 0;
+    
+    // Give each player 10 random cards (2 through A, suits not included)
+    for (let i = 0; i < 10; i++) {
+        const randomCard1 = values[Math.floor(Math.random() * values.length)];
+        const randomCard2 = values[Math.floor(Math.random() * values.length)];
+        player1Deck.push({ value: randomCard1, image: `cards/${randomCard1}.png` });
+        player2Deck.push({ value: randomCard2, image: `cards/${randomCard2}.png` });
     }
 
-    // Update Scores
-    player1ScoreText.textContent = `Score: ${player1Score}`;
-    player2ScoreText.textContent = `Score: ${player2Score}`;
+    updateScores();
+    updateCardDisplay();
+    nextRoundButton.style.display = "none";
+}
 
-    // Show the result in modal
-    modalText.textContent = roundWinner;
-    resultModal.style.display = "block";
+function getCardValue(card) {
+    const cardValue = card.value;
+    if (!isNaN(cardValue)) return parseInt(cardValue); // Number cards (2-10)
+    if (cardValue === 'J') return 11;
+    if (cardValue === 'Q') return 12;
+    if (cardValue === 'K') return 13;
+    if (cardValue === 'A') return 14;
+}
 
-    // Check if it's the last round
-    if (round === 10) {
-        if (player1Score > player2Score) {
-            winnerText.textContent = "Player 1 Wins the Game!";
-        } else if (player1Score < player2Score) {
-            winnerText.textContent = "Player 2 Wins the Game!";
-        } else {
-            winnerText.textContent = "It's a Draw!";
-        }
+function flipCards() {
+    if (roundCount >= 10) return; // Stop game after 10 rounds
 
-        // Disable further play
+    const player1Card = player1Deck[roundCount];
+    const player2Card = player2Deck[roundCount];
+
+    player1CardElement.innerHTML = `<img src="${player1Card.image}" alt="Player 1 card">`;
+    player2CardElement.innerHTML = `<img src="${player2Card.image}" alt="Player 2 card">`;
+
+    const player1Value = getCardValue(player1Card);
+    const player2Value = getCardValue(player2Card);
+
+    if (player1Value > player2Value) {
+        resultElement.textContent = `Player 1 Wins Round ${roundCount + 1}!`;
+        player1RoundsWon++;
+    } else if (player1Value < player2Value) {
+        resultElement.textContent = `Player 2 Wins Round ${roundCount + 1}!`;
+        player2RoundsWon++;
+    } else {
+        resultElement.textContent = `Round ${roundCount + 1} is a Tie!`;
+    }
+
+    roundCount++;
+    updateScores();
+
+    if (roundCount >= 10) {
+        declareWinner();
+    } else {
+        nextRoundButton.style.display = "inline";
         flipButton.disabled = true;
+    }
+}
+
+function updateScores() {
+    player1Score.textContent = `Rounds Won: ${player1RoundsWon}`;
+    player2Score.textContent = `Rounds Won: ${player2RoundsWon}`;
+}
+
+function updateCardDisplay() {
+    player1CardElement.innerHTML = `<img src="cards/back.png" alt="Back of card">`;
+    player2CardElement.innerHTML = `<img src="cards/back.png" alt="Back of card">`;
+}
+
+function nextRound() {
+    resultElement.textContent = "";
+    updateCardDisplay();
+    flipButton.disabled = false;
+    nextRoundButton.style.display = "none";
+}
+
+function declareWinner() {
+    if (player1RoundsWon > player2RoundsWon) {
+        resultElement.textContent = "Player 1 Wins the Game!";
+    } else if (player1RoundsWon < player2RoundsWon) {
+        resultElement.textContent = "Player 2 Wins the Game!";
     } else {
-        // Move to the next round
-        round++;
-        roundNumber.textContent = `Round ${round} of 10`;
+        resultElement.textContent = "The Game is a Tie!";
     }
-});
+    flipButton.disabled = true;
+    nextRoundButton.style.display = "none";
+}
 
-// Next Round Event
-nextRoundButton.addEventListener("click", function () {
-    // Close modal and reset card images
-    resultModal.style.display = "none";
-    player1CardImg.src = "cards/back.png";
-    player2CardImg.src = "cards/back.png";
-    winnerText.textContent = "Press Flip to Play!";
-});
-
-// Close Modal Event
-closeModal.addEventListener("click", function () {
-    resultModal.style.display = "none";
-});
-
-// Close modal when clicking outside of it
-window.onclick = function (event) {
-    if (event.target === resultModal) {
-        resultModal.style.display = "none";
-    }
-};
+// Start game on load
+flipButton.addEventListener("click", flipCards);
+nextRoundButton.addEventListener("click", nextRound);
+initializeGame();
