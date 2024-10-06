@@ -8,7 +8,7 @@ import {
 import { Web3Modal } from "@web3modal/html";
 
 // 1. Define constants
-const projectId = import.meta.env.VITE_PROJECT_ID;
+const projectId = process.env.projectId;
 if (!projectId) {
   throw new Error("You need to provide VITE_PROJECT_ID env variable");
 }
