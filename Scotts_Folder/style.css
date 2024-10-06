@@ -1,0 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative; /* Enable positioning of elements */
+}
+
+h1 {
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin: 10px 0;
+}
+
+.card-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.card {
+    width: 150px; /* Set the width of the card */
+    height: 225px; /* Set the height of the card */
+    overflow: hidden;
+    margin: 0 15px; /* Add horizontal space between cards */
+}
+
+.card img {
+    width: 100%; /* Make image fill the card area */
+    height: auto; /* Maintain aspect ratio */
+}
+
+button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+}
+
+#result {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+/* New styles for the virtual players (monsters) */
+#player1, #player2 {
+    position: absolute;
+    top: 50%; /* Vertically center the players */
+    transform: translateY(-50%); /* Center the player vertically */
+}
+
+#player1 {
+    left: 0; /* Position player 1 (orange monster) on the left */
+    margin-left: 30px;
+}
+
+#player2 {
+    right: 0; /* Position player 2 (green monster) on the right */
+    margin-right: 30px;
+}
+
+.player-img {
+    width: 300px; /* Adjust the size of the monster GIFs */
+    height: auto;
+}
