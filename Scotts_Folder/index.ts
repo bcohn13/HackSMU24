@@ -19,3 +19,5 @@ const serve = Bun.serve({
         }
     }
 });
+
+console.log("Listening on localhost:" + serve.port);
