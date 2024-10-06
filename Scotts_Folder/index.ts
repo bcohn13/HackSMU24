@@ -1,24 +1,21 @@
-
 // Bun v1.1.27+ required
-const serve =Bun.serve({
-    port:5080,
+const serve = Bun.serve({
+    port: 5080,
     async fetch(req) {
         const url = new URL(req.url);
-        if (url.pathname === "/game.js"){
-            const gamejs = "./game.js";
-            const gamefile = Bun.file(gamejs);
-            console.log("game?");
-            return new Response(gamefile); 
-        } 
-        const filepath = url;
-        const loaded_file = Bun.file(filepath);
-        return new Response(loaded_file);
+        const filepath = url.pathname;
+        //console.log("FILE PATH: " + filepath);
 
-        console.log("new request?");
-        const path = "./index.html";
-        const file = Bun.file(path);
-        return new Response(file);
+        if (filepath === "/") {
+            const home = Bun.file("./index.html");
+            return new Response(home);
+        }
+
+        try {
+            const loaded_file = Bun.file("." + filepath);
+            return new Response(loaded_file);
+        } catch (error) {
+            return new Response("File not found", { status: 404 });
+        }
     }
 });
-
-  console.log("Hello listening at? : " + serve.port);
